@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: resume-extractor
+    env: docker
+    plan: free
+    region: oregon
+    envVars:
+      - key: LLM_PROVIDER
+        value: google
+      - key: GOOGLE_MODEL
+        value: gemma-3-27b-it
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: PROJECT_NAME
+        value: Resume Extractor Cloud
