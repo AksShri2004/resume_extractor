@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     
     # Google AI Studio Settings
     GOOGLE_API_KEY: Optional[str] = None
-    GOOGLE_MODEL: str = "gemini-1.5-flash"
+    GOOGLE_MODEL: str = "gemma-3-27b-it"
 
     model_config = SettingsConfigDict(case_sensitive=True)
 
