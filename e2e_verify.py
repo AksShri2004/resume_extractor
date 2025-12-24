@@ -12,7 +12,7 @@ def run_e2e(pdf_path):
             response = requests.post(
                 f"{BASE_URL}/v1/parse",
                 headers={"X-API-Key": API_KEY},
-                files={"file": f}
+                files={"file": ("resume.pdf", f, "application/pdf")}
             )
         
         if response.status_code != 202:
