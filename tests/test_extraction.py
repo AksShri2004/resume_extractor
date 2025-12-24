@@ -65,3 +65,18 @@ def test_extract_text_fallback_ocr():
         text = extractor.extract_text(b"%PDF-1.4...")
         
         assert "OCR Text" in text
+
+def test_extract_text_multipage():
+    """Test extraction from multiple pages."""
+    mock_pdf = MagicMock()
+    page1 = MagicMock()
+    page1.extract_text.return_value = "Page 1"
+    page2 = MagicMock()
+    page2.extract_text.return_value = "Page 2"
+    mock_pdf.pages = [page1, page2]
+    
+    with patch("app.services.pdf_extractor.pdfplumber.open") as mock_open:
+        mock_open.return_value.__enter__.return_value = mock_pdf
+        extractor = PDFExtractor()
+        text = extractor.extract_text(b"mock content")
+        assert text == "Page 1\nPage 2"
