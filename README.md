@@ -60,19 +60,22 @@ git push origin main
 
 ### 📖 API Usage
 
-**Submit Resume:**
-```bash
-curl -X POST "https://your-app.onrender.com/v1/parse" \
-     -H "X-API-Key: your-secret-key" \
-     -F "file=@resume.pdf"
-```
+The microservice is deployed at: `https://resume-extractor-5uc5.onrender.com`
 
-**Check Status:**
+**1. Submit a Resume for Parsing**
 ```bash
-curl "https://your-app.onrender.com/v1/jobs/<job_id>" \
-     -H "X-API-Key: your-secret-key"
+curl -X POST "https://resume-extractor-5uc5.onrender.com/v1/parse" \
+     -H "X-API-Key: YOUR_SECRET_KEY" \
+     -F "file=@your_resume.pdf"
+```
+*Returns a `job_id` to track processing.*
+
+**2. Retrieve Parsed JSON Results**
+```bash
+curl -X GET "https://resume-extractor-5uc5.onrender.com/v1/jobs/{job_id}" \
+     -H "X-API-Key: YOUR_SECRET_KEY"
 ```
 
 ---
-Built with ❤️ by Akshat Shrivastava
+Built with ❤️ by [Akshat Shrivastava](https://github.com/akshatshrivastava)
 
