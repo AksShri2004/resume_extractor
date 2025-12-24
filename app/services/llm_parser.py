@@ -1,4 +1,5 @@
 from langchain_community.chat_models import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from app.core.config import settings
@@ -6,10 +7,19 @@ from app.schemas.resume import ResumeSchema
 
 class LLMParser:
     def __init__(self):
-        self.llm = ChatOllama(
-            base_url=settings.OLLAMA_BASE_URL,
-            model=settings.OLLAMA_MODEL
-        )
+        if settings.LLM_PROVIDER == "google":
+            if not settings.GOOGLE_API_KEY:
+                raise ValueError("GOOGLE_API_KEY must be set when using google provider")
+            self.llm = ChatGoogleGenerativeAI(
+                model=settings.GOOGLE_MODEL,
+                google_api_key=settings.GOOGLE_API_KEY,
+                temperature=0
+            )
+        else:
+            self.llm = ChatOllama(
+                base_url=settings.OLLAMA_BASE_URL,
+                model=settings.OLLAMA_MODEL
+            )
         
         self.prompt_template = ChatPromptTemplate.from_template("""
         You are an expert resume parser. Extract the following information from the provided resume text into a valid JSON representation.
