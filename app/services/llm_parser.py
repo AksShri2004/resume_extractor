@@ -8,8 +8,7 @@ class LLMParser:
     def __init__(self):
         self.llm = ChatOllama(
             base_url=settings.OLLAMA_BASE_URL,
-            model=settings.OLLAMA_MODEL,
-            format="json"
+            model=settings.OLLAMA_MODEL
         )
         
         self.prompt_template = ChatPromptTemplate.from_template("""
