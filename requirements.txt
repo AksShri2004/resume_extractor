@@ -11,3 +11,4 @@ python-multipart
 pytest
 pytest-cov
 pdf2image
+langchain-google-genai
