@@ -38,26 +38,6 @@ A production-style FastAPI microservice for high-fidelity semantic parsing of re
    uvicorn app.main:app --reload
    ```
 
-## ☁️ Deployment on Render
-
-### 1. Push to GitHub
-Yes, you should push all project files **except** those excluded by `.gitignore` (like `.venv` and `conductor/`).
-
-```bash
-git add .
-git commit -m "feat: Initial commit for cloud deployment"
-git push origin main
-```
-
-### 2. Render Setup
-1. Log in to [Render](https://render.com).
-2. Click **New +** > **Blueprint**.
-3. Connect your GitHub repository.
-4. Render will automatically detect the `render.yaml` file.
-5. **Configure Secrets:** In the Render dashboard, you must provide the following:
-   - `GOOGLE_API_KEY`: Your key from [Google AI Studio](https://aistudio.google.com/).
-   - `API_KEY`: A secret string of your choice to protect your API (sent via `X-API-Key` header).
-
 ### 📖 API Usage
 
 The microservice is deployed at: `https://resume-extractor-5uc5.onrender.com`
