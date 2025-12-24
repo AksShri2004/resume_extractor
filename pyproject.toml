@@ -1,0 +1,33 @@
+[project]
+name = "resume-extractor"
+version = "0.1.0"
+description = "High-fidelity resume parsing microservice using FastAPI and Gemma 3"
+authors = [
+    {name = "Akshat Shrivastava", email = "aksmelittle@Akshats-MacBook-Air.local"},
+]
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "pdfplumber",
+    "pypdf",
+    "pytesseract",
+    "langchain",
+    "langchain-community",
+    "httpx",
+    "python-multipart"
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]

@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+pydantic
+pdfplumber
+pypdf
+pytesseract
+langchain
+langchain-community
+httpx
+python-multipart
+pytest
+pytest-cov
