@@ -16,7 +16,6 @@ def test_llm_parser_uses_ollama_by_default():
 
 def test_llm_parser_uses_google_when_selected():
     """Test that LLMParser uses Google backend when selected."""
-    # This will fail until I implement Google backend support in LLMParser
     with patch("app.services.llm_parser.settings") as mock_settings, \
          patch("app.services.llm_parser.ChatGoogleGenerativeAI") as mock_google:
         
@@ -27,3 +26,19 @@ def test_llm_parser_uses_google_when_selected():
         parser = LLMParser()
         mock_google.assert_called_once()
 
+def test_llm_parser_parse_logic():
+    """Test that parse method invokes the underlying chain."""
+    with patch("app.services.llm_parser.settings") as mock_settings, \
+         patch("app.services.llm_parser.ChatGoogleGenerativeAI"):
+        
+        mock_settings.LLM_PROVIDER = "google"
+        mock_settings.GOOGLE_API_KEY = "fake-key"
+        
+        parser = LLMParser()
+        # Replace the chain with a mock to verify invocation
+        parser.chain = MagicMock()
+        parser.chain.invoke.return_value = {"summary": "Parsed"}
+        
+        result = parser.parse("resume text")
+        assert result == {"summary": "Parsed"}
+        parser.chain.invoke.assert_called_once_with({"text": "resume text"})
