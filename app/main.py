@@ -2,6 +2,9 @@ from fastapi import FastAPI, Depends, APIRouter
 from app.core.config import settings
 from app.core.security import get_api_key
 from app.api.v1.endpoints import resume
+from app.core.logging import setup_logging
+
+setup_logging()
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
