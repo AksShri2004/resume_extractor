@@ -114,5 +114,5 @@ async function parseResume(file) {
 ```
 
 ---
-Built with ❤️ by [Akshat Shrivastava](https://github.com/akshatshrivastava)
+Built with ❤️ by [Akshat Shrivastava](https://github.com/AksShri2004)
 
