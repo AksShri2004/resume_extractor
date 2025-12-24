@@ -1,12 +1,15 @@
 from langchain_community.chat_models import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
 from app.core.config import settings
+from app.schemas.resume import ResumeSchema
 
 class LLMParser:
     def __init__(self):
         self.llm = ChatOllama(
             base_url=settings.OLLAMA_BASE_URL,
-            model=settings.OLLAMA_MODEL
+            model=settings.OLLAMA_MODEL,
+            format="json"
         )
         
         self.prompt_template = ChatPromptTemplate.from_template("""
@@ -31,3 +34,9 @@ class LLMParser:
             "summary": "string"
         }}
         """)
+        
+        self.output_parser = JsonOutputParser(pydantic_object=ResumeSchema)
+        self.chain = self.prompt_template | self.llm | self.output_parser
+        
+    def parse(self, text: str) -> dict:
+        return self.chain.invoke({"text": text})
