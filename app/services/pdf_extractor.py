@@ -1,6 +1,8 @@
 import pdfplumber
 import pypdf
 import io
+import pytesseract
+from pdf2image import convert_from_bytes
 
 class PDFExtractor:
     def extract_text(self, file_content: bytes) -> str:
@@ -14,7 +16,6 @@ class PDFExtractor:
                     if page_text:
                         text += page_text + "\n"
         except Exception:
-            # Fall through to fallback
             pass
             
         if text.strip():
@@ -27,6 +28,17 @@ class PDFExtractor:
                 page_text = page.extract_text()
                 if page_text:
                     text += page_text + "\n"
+        except Exception:
+            pass
+            
+        if text.strip():
+            return text.strip()
+
+        # Fallback to OCR (Tesseract)
+        try:
+            images = convert_from_bytes(file_content)
+            for image in images:
+                text += pytesseract.image_to_string(image) + "\n"
         except Exception:
             pass
             

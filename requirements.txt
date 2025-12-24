@@ -10,3 +10,4 @@ httpx
 python-multipart
 pytest
 pytest-cov
+pdf2image

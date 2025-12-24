@@ -3,8 +3,11 @@ FROM python:3.11
 # Install system dependencies for Tesseract OCR
 # Using full python image covers most build deps
 RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3-dev \
     tesseract-ocr \
     libtesseract-dev \
+    poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
