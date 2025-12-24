@@ -56,6 +56,63 @@ curl -X GET "https://resume-extractor-5uc5.onrender.com/v1/jobs/{job_id}" \
      -H "X-API-Key: YOUR_SECRET_KEY"
 ```
 
+### 🐍 Programmatic Integration
+
+#### Python
+```python
+import requests
+import time
+
+API_URL = "https://resume-extractor-5uc5.onrender.com/v1"
+HEADERS = {"X-API-Key": "YOUR_SECRET_KEY"}
+
+# 1. Submit Resume
+with open("resume.pdf", "rb") as f:
+    response = requests.post(f"{API_URL}/parse", headers=HEADERS, files={"file": f})
+    job_id = response.json()["job_id"]
+
+# 2. Poll for results
+while True:
+    res = requests.get(f"{API_URL}/jobs/{job_id}", headers=HEADERS).json()
+    if res["status"] == "completed":
+        print(res["result"])
+        break
+    elif res["status"] == "failed":
+        print("Error:", res.get("error"))
+        break
+    time.sleep(5)
+```
+
+#### JavaScript (Node.js/Browser)
+```javascript
+const API_URL = "https://resume-extractor-5uc5.onrender.com/v1";
+const HEADERS = { "X-API-Key": "YOUR_SECRET_KEY" };
+
+async function parseResume(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  // 1. Submit
+  const subResponse = await fetch(`${API_URL}/parse`, {
+    method: "POST",
+    headers: HEADERS,
+    body: formData
+  });
+  const { job_id } = await subResponse.json();
+
+  // 2. Poll
+  const poll = setInterval(async () => {
+    const res = await fetch(`${API_URL}/jobs/${job_id}`, { headers: HEADERS });
+    const data = await res.json();
+    
+    if (data.status === "completed") {
+      console.log(data.result);
+      clearInterval(poll);
+    }
+  }, 5000);
+}
+```
+
 ---
 Built with ❤️ by [Akshat Shrivastava](https://github.com/akshatshrivastava)
 
