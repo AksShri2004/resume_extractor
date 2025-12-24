@@ -11,11 +11,12 @@ def test_health_check():
 
 def test_api_key_missing():
     # Hit an endpoint that requires auth
-    response = client.get("/v1/dummy")
+    response = client.get("/v1/jobs/123")
     assert response.status_code == 403
 
 def test_api_key_valid():
     headers = {"X-API-Key": "test-secret-key"}
-    response = client.get("/v1/dummy", headers=headers)
-    assert response.status_code == 200
-    assert response.json() == {"message": "authenticated"}
+    response = client.get("/v1/jobs/123", headers=headers)
+    # Auth passed, but job not found -> 404
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Job not found"
