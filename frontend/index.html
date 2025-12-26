@@ -5,22 +5,29 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI Resume Extractor</title>
-    <!-- Tailwind Play CDN for guaranteed styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-          }
-        }
-      }
-    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      /* Brute force centering for the entire app */
+      body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        background-color: #F8F9FB;
+      }
+      #root {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
   </head>
-  <body class="bg-slate-50">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
