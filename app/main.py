@@ -34,4 +34,4 @@ def health_check():
 api_router = APIRouter()
 api_router.include_router(resume.router, tags=["resume"])
 
-app.include_router(api_router, prefix=settings.API_V1_STR, dependencies=[Depends(get_api_key)])
+app.include_router(api_router, prefix=settings.API_V1_STR)

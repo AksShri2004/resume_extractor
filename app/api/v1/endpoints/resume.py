@@ -1,5 +1,6 @@
-from fastapi import APIRouter, UploadFile, File, BackgroundTasks, HTTPException, status
+from fastapi import APIRouter, UploadFile, File, BackgroundTasks, HTTPException, status, Depends
 from app.services.pipeline import process_resume, jobs_db
+from app.core.security import get_api_key
 import uuid
 
 router = APIRouter()
@@ -7,7 +8,8 @@ router = APIRouter()
 @router.post("/parse", status_code=status.HTTP_202_ACCEPTED)
 async def submit_resume(
     background_tasks: BackgroundTasks,
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    token: str = Depends(get_api_key)
 ):
     if file.content_type != "application/pdf":
         raise HTTPException(
