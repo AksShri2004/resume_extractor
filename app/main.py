@@ -12,6 +12,9 @@ app = FastAPI(title=settings.PROJECT_NAME)
 # CORS Configuration
 origins = [
     "https://aksshri2004.github.io",
+    "https://AksShri2004.github.io",
+    "https://aksshri2004.github.io/",
+    "https://AksShri2004.github.io/",
     "http://localhost:5173",
     "http://localhost:3000",
 ]
