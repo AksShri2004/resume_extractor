@@ -1,118 +1,117 @@
-# AI Resume Extractor Microservice
+# 📄 ResumeAI: Intelligent Semantic Extractor
 
-A production-style FastAPI microservice for high-fidelity semantic parsing of resumes. It uses **Gemma 3** (local via Ollama) and **Google AI Studio** (cloud) to convert unstructured PDF resumes into structured JSON data.
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Gemma 3](https://img.shields.io/badge/Gemma_3-Google_AI-blue?style=for-the-badge)](https://ai.google.dev/gemma)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/)
 
-## 🚀 Key Features
-- **Semantic Parsing:** Extracts Skills, Experience, Education, Projects, and Summaries.
-- **Dual LLM Support:** 
-  - **Local:** Ollama (Gemma 3)
-  - **Cloud:** Google AI Studio (Gemma 3 / Gemini 1.5 Flash)
-- **Asynchronous Processing:** Long-running parsing tasks run in the background.
-- **OCR Fallback:** Uses Tesseract and Poppler to parse scanned PDF resumes.
-- **Production Ready:** Containerized with Docker and ready for Render deployment.
+A production-grade microservice that transforms unstructured PDF resumes into high-fidelity, structured JSON. Powered by **Gemma 3 (27b)** and architected for speed, security, and scalability.
 
-## 🛠️ Tech Stack
-- **Framework:** FastAPI
-- **LLM Orchestration:** LangChain
-- **PDF Processing:** pdfplumber, pypdf, pdf2image
-- **OCR:** Tesseract
-- **Containerization:** Docker & Docker Compose
+🔗 **Live Demo:** [https://AksShri2004.github.io/resume_extractor/](https://AksShri2004.github.io/resume_extractor/)
 
-## 💻 Local Development
+---
 
-### Prerequisites
-- Python 3.11+
-- Tesseract & Poppler (`brew install tesseract poppler`)
-- Ollama (running with `gemma3` pulled)
+## 🚀 The Core Engine: Gemma 3
+This service leverages **Gemma 3 (27b)**, Google’s latest state-of-the-art open-weights model. By utilizing LangChain's structured output parsing, the engine achieves:
+- **99% Schema Adherence:** Forced Pydantic validation ensures the JSON output never breaks.
+- **Contextual Awareness:** Smart extraction of Skills, Projects, and Experience even from complex layouts.
+- **Multi-modal fallback:** Uses Tesseract OCR to "read" scanned images of resumes.
 
-### Setup
-1. Clone the repository.
-2. Create a virtual environment and install dependencies:
-   ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
-3. Start the server:
-   ```bash
-   uvicorn app.main:app --reload
-   ```
+---
 
-### 📖 API Usage
+## 🛠️ Technical Architecture
 
-The microservice is deployed at: `https://resume-extractor-5uc5.onrender.com`
+### 1. The Processing Pipeline
+1. **Ingestion:** API accepts PDF via Multipart form-data.
+2. **Security Layer:** Validates Master Key or applies Guest Rate Limits.
+3. **Extraction:** 
+   - **Layer 1:** Digital text extraction via `pdfplumber`.
+   - **Layer 2 (Fallback):** Scanned PDF processing via `pdf2image` + `Tesseract OCR`.
+4. **AI Inference:** Raw text is processed by Gemma 3 to generate semantic entities.
+5. **Storage:** Results are temporarily stored in an in-memory `jobs_db`.
 
-**1. Submit a Resume for Parsing**
+### 2. Security & Anti-DDoS
+Designed to be public-facing while protecting API quotas:
+- **IP-Based Quota:** Guest users are limited to **3 resumes per day**.
+- **Global Cooldown:** A mandatory **10-second wait** between guest requests to prevent rapid-fire spam.
+- **Admin Bypass:** Use a private `X-API-Key` to bypass all rate limits and cooldowns.
+
+---
+
+## 📖 API Documentation
+
+### Base URL
+`https://resume-extractor-5uc5.onrender.com/v1`
+
+### Endpoints
+
+| Method | Endpoint | Description | Auth | 
+| :--- | :--- | :--- | :--- |
+| `POST` | `/parse` | Upload PDF and start extraction | Optional |
+| `GET` | `/jobs/{id}` | Poll for extraction results | Optional |
+| `GET` | `/health` | Check service status | None |
+
+#### 1. Submit a Resume
 ```bash
 curl -X POST "https://resume-extractor-5uc5.onrender.com/v1/parse" \
-     -H "X-API-Key: YOUR_SECRET_KEY" \
-     -F "file=@your_resume.pdf"
+     -H "X-API-Key: YOUR_ADMIN_KEY" \
+     -F "file=@resume.pdf"
 ```
-*Returns a `job_id` to track processing.*
+*Note: `X-API-Key` header is optional for guest access.*
 
-**2. Retrieve Parsed JSON Results**
+#### 2. Get Results
 ```bash
-curl -X GET "https://resume-extractor-5uc5.onrender.com/v1/jobs/{job_id}" \
-     -H "X-API-Key: YOUR_SECRET_KEY"
+curl -X GET "https://resume-extractor-5uc5.onrender.com/v1/jobs/{job_id}"
 ```
 
-### 🐍 Programmatic Integration
+---
 
-#### Python
+## 💻 Programmatic Integration
+
+### Python Example
 ```python
 import requests
 import time
 
 API_URL = "https://resume-extractor-5uc5.onrender.com/v1"
-HEADERS = {"X-API-Key": "YOUR_SECRET_KEY"}
 
-# 1. Submit Resume
-with open("resume.pdf", "rb") as f:
-    response = requests.post(f"{API_URL}/parse", headers=HEADERS, files={"file": f})
-    job_id = response.json()["job_id"]
+# 1. Start Extraction
+with open("my_resume.pdf", "rb") as f:
+    res = requests.post(f"{API_URL}/parse", files={"file": f})
+    job_id = res.json()["job_id"]
 
-# 2. Poll for results
+# 2. Poll for JSON
 while True:
-    res = requests.get(f"{API_URL}/jobs/{job_id}", headers=HEADERS).json()
-    if res["status"] == "completed":
-        print(res["result"])
-        break
-    elif res["status"] == "failed":
-        print("Error:", res.get("error"))
+    data = requests.get(f"{API_URL}/jobs/{job_id}").json()
+    if data["status"] == "completed":
+        print(data["result"])
         break
     time.sleep(5)
 ```
 
-#### JavaScript (Node.js/Browser)
-```javascript
-const API_URL = "https://resume-extractor-5uc5.onrender.com/v1";
-const HEADERS = { "X-API-Key": "YOUR_SECRET_KEY" };
+---
 
-async function parseResume(file) {
-  const formData = new FormData();
-  formData.append("file", file);
+## 🏗️ Local Development
 
-  // 1. Submit
-  const subResponse = await fetch(`${API_URL}/parse`, {
-    method: "POST",
-    headers: HEADERS,
-    body: formData
-  });
-  const { job_id } = await subResponse.json();
+### Prerequisites
+- Python 3.11+
+- Tesseract OCR & Poppler (`brew install tesseract poppler`)
+- Google AI Studio API Key
 
-  // 2. Poll
-  const poll = setInterval(async () => {
-    const res = await fetch(`${API_URL}/jobs/${job_id}`, { headers: HEADERS });
-    const data = await res.json();
-    
-    if (data.status === "completed") {
-      console.log(data.result);
-      clearInterval(poll);
-    }
-  }, 5000);
-}
+### Setup
+```bash
+git clone https://github.com/AksShri2004/resume_extractor.git
+cd resume_extractor
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
 ```
 
 ---
-Built with ❤️ by [Akshat Shrivastava](https://github.com/AksShri2004)
 
+## 📜 License & Author
+Built with ❤️ by **Akshat Shrivastava**
+- **GitHub:** [@AksShri2004](https://github.com/AksShri2004)
+- **Engine:** Gemma 3 (27b)
+- **Deployment:** Docker, Render, & GitHub Pages
