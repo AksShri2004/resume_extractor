@@ -1,14 +1,214 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/resume_extractor/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Resume Extractor</title>
-    <script type="module" crossorigin src="/resume_extractor/assets/index-Bo4n5dM6.js"></script>
-    <link rel="stylesheet" crossorigin href="/resume_extractor/assets/index-DQ3P1g1z.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+    <!-- Tailwind Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        /* Brute force centering */
+        html, body {
+            margin: 0; padding: 0; width: 100%; min-height: 100%;
+            display: flex; justify-content: center; background-color: #F8F9FB;
+        }
+        #root { width: 100%; display: flex; justify-content: center; }
+    </style>
+</head>
+<body>
+    <div id="root" class="w-full flex flex-col items-center">
+        <!-- Navbar -->
+        <nav class="w-full bg-white border-b border-slate-200 flex justify-center sticky top-0 z-50">
+            <div class="w-full max-w-4xl px-6 h-16 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="bg-indigo-600 p-1.5 rounded-lg">
+                        <i data-lucide="file-text" class="text-white w-5 h-5"></i>
+                    </div>
+                    <span class="text-lg font-bold">ResumeAI</span>
+                </div>
+                <a href="https://github.com/AksShri2004" target="_blank" class="text-slate-400 hover:text-indigo-600">
+                    <i data-lucide="github" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </nav>
+
+        <div class="w-full max-w-2xl px-6 py-16 flex flex-col items-center text-center">
+            <div class="mb-12">
+                <div class="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-[10px] font-bold mb-4 uppercase tracking-widest">
+                    <i data-lucide="sparkles" class="w-3 h-3"></i> Gemini AI Powered
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-black text-slate-900 mb-4 tracking-tight">Resume Extractor</h1>
+                <p class="text-slate-500 font-medium text-lg">Upload your resume and get a structured <br/> JSON representation instantly.</p>
+            </div>
+
+            <div class="w-full space-y-8 flex flex-col items-center">
+                <!-- Auth Card -->
+                <div class="w-full bg-white p-8 rounded-3xl shadow-sm border border-slate-200 text-left">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="key" class="w-5 h-5 text-indigo-600"></i>
+                        <h3 class="font-bold text-slate-800">Authentication</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">X-API-Key</label>
+                        <input type="password" id="apiKey" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-600 outline-none font-mono text-sm" placeholder="Enter your secret key">
+                    </div>
+                </div>
+
+                <!-- Upload Card -->
+                <div class="w-full bg-white p-2 rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div id="dropzone" class="group border-2 border-dashed border-slate-200 rounded-2xl p-10 flex flex-col items-center justify-center transition-all cursor-pointer hover:border-indigo-400">
+                        <input type="file" id="fileInput" class="hidden" accept=".pdf">
+                        <div id="uploadIcon" class="p-5 rounded-2xl mb-4 bg-slate-50 text-slate-300">
+                            <i data-lucide="upload" class="w-8 h-8"></i>
+                        </div>
+                        <div id="uploadText" class="text-center text-slate-400">
+                            <p class="font-bold text-slate-700">Choose PDF</p>
+                            <p class="text-xs">Drag & Drop Resume</p>
+                        </div>
+                    </div>
+                    <button id="extractBtn" class="w-full mt-2 py-4 rounded-2xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="layout-panel-left" class="w-5 h-5"></i>
+                        <span>Start Extraction</span>
+                    </button>
+                </div>
+
+                <!-- Result Area -->
+                <div id="resultCard" class="hidden w-full bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden text-left">
+                    <div class="px-8 py-5 border-b border-slate-100 flex items-center justify-between">
+                        <h3 class="font-bold text-slate-800">Output</h3>
+                        <span id="statusBadge" class="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700">Active</span>
+                    </div>
+                    <div class="p-8">
+                        <div id="loadingState" class="hidden flex flex-col items-center py-10 text-indigo-600">
+                            <div class="animate-spin w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full mb-2"></div>
+                            <p class="text-sm font-bold">Parsing...</p>
+                        </div>
+                        <div id="errorState" class="hidden text-red-600 text-sm bg-red-50 p-4 rounded-xl border border-red-100"></div>
+                        <div id="successState" class="hidden space-y-4">
+                            <div class="flex justify-between items-center">
+                                <p id="jobIdDisplay" class="text-[10px] text-slate-400 font-mono"></p>
+                                <button onclick="copyJson()" class="text-[10px] font-bold text-indigo-600">COPY JSON</button>
+                            </div>
+                            <pre id="jsonOutput" class="bg-[#1E1E1E] text-indigo-300 p-6 rounded-2xl text-[12px] font-mono leading-relaxed overflow-auto max-h-[400px] custom-scrollbar"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="w-full max-w-2xl px-6 pb-20 text-center mt-auto">
+            <div class="h-px bg-slate-200 w-full mb-8"></div>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+                Built by <a href="https://github.com/AksShri2004" target="_blank" class="text-slate-900 underline underline-offset-4">Akshat Shrivastava</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        const API_BASE_URL = "https://resume-extractor-5uc5.onrender.com/v1";
+        let selectedFile = null;
+
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const extractBtn = document.getElementById('extractBtn');
+        const apiKeyInput = document.getElementById('apiKey');
+        const resultCard = document.getElementById('resultCard');
+        const loadingState = document.getElementById('loadingState');
+        const errorState = document.getElementById('errorState');
+        const successState = document.getElementById('successState');
+        const jsonOutput = document.getElementById('jsonOutput');
+        const statusBadge = document.getElementById('statusBadge');
+        const jobIdDisplay = document.getElementById('jobIdDisplay');
+
+        dropzone.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => handleFile(e.target.files[0]);
+
+        function handleFile(file) {
+            if (file && file.type === "application/pdf") {
+                selectedFile = file;
+                document.getElementById('uploadIcon').classList.replace('text-slate-300', 'text-white');
+                document.getElementById('uploadIcon').classList.add('bg-indigo-600');
+                document.getElementById('uploadText').innerHTML = `<p class="font-bold text-indigo-700 text-sm">${file.name}</p>`;
+            }
+        }
+
+        extractBtn.onclick = async () => {
+            const apiKey = apiKeyInput.value.trim();
+            if (!selectedFile || !apiKey) return alert("Select PDF and enter API Key");
+
+            resultCard.classList.remove('hidden');
+            loadingState.classList.remove('hidden');
+            errorState.classList.add('hidden');
+            successState.classList.add('hidden');
+            extractBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/parse`, {
+                    method: 'POST',
+                    headers: { 'X-API-Key': apiKey },
+                    body: formData
+                });
+                if (!res.ok) throw new Error("Upload failed");
+                const { job_id } = await res.json();
+                pollStatus(job_id, apiKey);
+            } catch (err) {
+                showError(err.message);
+            }
+        };
+
+        async function pollStatus(id, key) {
+            const timer = setInterval(async () => {
+                try {
+                    const res = await fetch(`${API_BASE_URL}/jobs/${id}`, { headers: { 'X-API-Key': key } });
+                    const data = await res.json();
+                    if (data.status === 'completed') {
+                        clearInterval(timer);
+                        showSuccess(data.result, id);
+                    } else if (data.status === 'failed') {
+                        clearInterval(timer);
+                        showError(data.error);
+                    }
+                } catch (err) {
+                    clearInterval(timer);
+                    showError(err.message);
+                }
+            }, 3000);
+        }
+
+        function showSuccess(result, id) {
+            loadingState.classList.add('hidden');
+            successState.classList.remove('hidden');
+            statusBadge.textContent = "Completed";
+            statusBadge.className = "text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600";
+            jobIdDisplay.textContent = `ID: ${id}`;
+            jsonOutput.textContent = JSON.stringify(result, null, 2);
+            extractBtn.disabled = false;
+        }
+
+        function showError(msg) {
+            loadingState.classList.add('hidden');
+            errorState.classList.remove('hidden');
+            errorState.textContent = msg;
+            statusBadge.textContent = "Failed";
+            statusBadge.className = "text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full bg-red-50 text-red-600";
+            extractBtn.disabled = false;
+        }
+
+        function copyJson() {
+            navigator.clipboard.writeText(jsonOutput.textContent);
+            alert("Copied!");
+        }
+    </script>
+</body>
 </html>
