@@ -90,7 +90,7 @@
                             <div class="animate-spin w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full mb-2"></div>
                             <p class="text-sm font-bold">Parsing...</p>
                         </div>
-                        <div id="errorState" class="hidden text-red-600 text-sm bg-red-50 p-4 rounded-xl border border-red-100"></div>
+                        <div id="errorState" class="hidden text-red-600 text-sm bg-red-50 p-4 rounded-xl border border-red-100 whitespace-pre-wrap"></div>
                         <div id="successState" class="hidden space-y-4">
                             <div class="flex justify-between items-center">
                                 <p id="jobIdDisplay" class="text-[10px] text-slate-400 font-mono"></p>
@@ -134,8 +134,9 @@
         function handleFile(file) {
             if (file && file.type === "application/pdf") {
                 selectedFile = file;
-                document.getElementById('uploadIcon').classList.replace('text-slate-300', 'text-white');
-                document.getElementById('uploadIcon').classList.add('bg-indigo-600');
+                const icon = document.getElementById('uploadIcon');
+                icon.classList.replace('text-slate-300', 'text-white');
+                icon.classList.add('bg-indigo-600');
                 document.getElementById('uploadText').innerHTML = `<p class="font-bold text-indigo-700 text-sm">${file.name}</p>`;
             }
         }
@@ -159,7 +160,12 @@
                     headers: { 'X-API-Key': apiKey },
                     body: formData
                 });
-                if (!res.ok) throw new Error("Upload failed");
+                
+                if (!res.ok) {
+                    const detail = await res.json().catch(() => ({ detail: "Unknown Error" }));
+                    throw new Error(`Upload Failed (Status ${res.status}): ${detail.detail || JSON.stringify(detail)}`);
+                }
+                
                 const { job_id } = await res.json();
                 pollStatus(job_id, apiKey);
             } catch (err) {
@@ -170,7 +176,12 @@
         async function pollStatus(id, key) {
             const timer = setInterval(async () => {
                 try {
-                    const res = await fetch(`${API_BASE_URL}/jobs/${id}`, { headers: { 'X-API-Key': key } });
+                    const res = await fetch(`${API_BASE_URL}/jobs/${id}`, { 
+                        headers: { 'X-API-Key': key } 
+                    });
+                    
+                    if (!res.ok) throw new Error(`Polling Error (${res.status})`);
+                    
                     const data = await res.json();
                     if (data.status === 'completed') {
                         clearInterval(timer);
