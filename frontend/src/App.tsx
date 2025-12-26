@@ -106,86 +106,89 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-20">
-      {/* Navbar */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#fcfcfd] text-slate-900 pb-20">
+      {/* Navbar - Centered Container */}
+      <nav className="bg-white/70 backdrop-blur-xl border-b border-slate-200/60 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <div className="bg-indigo-600 p-1.5 rounded-lg shadow-lg shadow-indigo-200">
+            <div className="flex items-center gap-2.5">
+              <div className="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-100">
                 <FileText className="text-white w-5 h-5" />
               </div>
-              <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">
-                ResumeAI
+              <span className="text-xl font-extrabold tracking-tight text-slate-900">
+                Resume<span className="text-indigo-600">AI</span>
               </span>
             </div>
-            <div className="flex items-center gap-4">
-              <a href="https://github.com/AksShri2004" target="_blank" rel="noreferrer" 
-                 className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all">
-                <Github className="w-5 h-5" />
-              </a>
-            </div>
+            <a href="https://github.com/AksShri2004" target="_blank" rel="noreferrer" 
+               className="p-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all">
+              <Github className="w-5 h-5" />
+            </a>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-        {/* Hero Area */}
-        <div className="text-center mb-12 px-4">
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
-            Intelligent Resume Parsing
+      <main className="max-w-6xl mx-auto px-6 pt-16">
+        {/* Centered Hero Area */}
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <h1 className="text-4xl sm:text-6xl font-[800] text-slate-900 mb-6 tracking-tight leading-[1.1]">
+            Parsing Resumes <br className="hidden sm:block"/> with <span className="text-indigo-600">Intelligence.</span>
           </h1>
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
-            Convert unstructured resumes into high-fidelity JSON data using Gemini 1.5 Flash.
+          <p className="text-lg text-slate-500 font-medium">
+            Turn unstructured documents into perfect JSON schemas using Gemini 1.5 Flash. Fast, accurate, and ready for production.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column: Input & Controls */}
-          <div className="lg:col-span-5 space-y-6">
+        <div className="flex flex-col lg:flex-row gap-10 items-start">
+          
+          {/* Left Column: Input Forms */}
+          <div className="w-full lg:w-[420px] space-y-6 shrink-0">
             
             {/* API Key Card */}
-            <div className="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-amber-50 rounded-lg text-amber-600">
+            <div className="bg-white p-6 rounded-[24px] shadow-xl shadow-slate-200/50 border border-slate-200/60">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
                   <Key className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-slate-800">API Authentication</h3>
+                <h3 className="font-bold text-slate-800 tracking-tight">Authentication</h3>
               </div>
-              <div className="space-y-3">
-                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">X-API-Key</label>
-                <input 
-                  type="password" 
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none font-mono text-sm"
-                  placeholder="Paste your secret key..."
-                />
-                <p className="text-[11px] text-slate-400 leading-relaxed italic">
-                  Key is transmitted over HTTPS and never stored.
-                </p>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">X-API-Key</label>
+                  <input 
+                    type="password" 
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-all outline-none font-mono text-sm"
+                    placeholder="Enter your secret key"
+                  />
+                </div>
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                  <p className="text-[11px] text-slate-400 leading-relaxed italic text-center">
+                    Your key is used for this session only and is never stored on our servers.
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* Upload Card */}
-            <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-200">
+            <div className="bg-white p-6 rounded-[24px] shadow-xl shadow-slate-200/50 border border-slate-200/60">
               <div 
-                className={`group border-2 border-dashed rounded-xl p-8 sm:p-12 flex flex-col items-center justify-center transition-all cursor-pointer ${file ? 'border-indigo-400 bg-indigo-50/50' : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50'}`}
+                className={`group border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center transition-all cursor-pointer ${file ? 'border-indigo-400 bg-indigo-50/30' : 'border-slate-200 hover:border-indigo-400 hover:bg-slate-50'}`}
                 onClick={() => document.getElementById('file-upload')?.click()}
               >
                 <input id="file-upload" type="file" className="hidden" accept=".pdf" onChange={handleFileChange} />
-                <div className={`p-4 rounded-2xl mb-4 transition-transform group-hover:scale-110 ${file ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'bg-slate-100 text-slate-400'}`}>
-                  <Upload className="w-8 h-8" />
+                <div className={`p-4 rounded-2xl mb-4 transition-all duration-500 group-hover:scale-110 ${file ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'bg-slate-100 text-slate-400'}`}>
+                  <Upload className="w-7 h-7" />
                 </div>
                 {file ? (
                   <div className="text-center">
-                    <p className="font-bold text-indigo-700 break-all">{file.name}</p>
-                    <p className="text-xs text-indigo-500 mt-1 uppercase font-semibold">{(file.size / 1024).toFixed(1)} KB • PDF</p>
+                    <p className="font-bold text-indigo-700 text-sm break-all px-2">{file.name}</p>
+                    <p className="text-[10px] text-indigo-400 mt-1 uppercase font-bold tracking-widest">{(file.size / 1024).toFixed(1)} KB • PDF</p>
                   </div>
                 ) : (
                   <div className="text-center">
-                    <p className="font-bold text-slate-700 text-lg">Upload Resume</p>
-                    <p className="text-sm text-slate-500">Drop your PDF file here</p>
+                    <p className="font-bold text-slate-700">Upload PDF</p>
+                    <p className="text-xs text-slate-400 mt-1">Drag and drop resume here</p>
                   </div>
                 )}
               </div>
@@ -193,107 +196,131 @@ function App() {
               <button 
                 onClick={startExtraction}
                 disabled={!file || !apiKey || loading}
-                className={`w-full mt-2 py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 shadow-lg ${(!file || !apiKey || loading) ? 'bg-slate-200 text-slate-400 shadow-none cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100 active:scale-[0.98]'}`}
+                className={`w-full mt-6 py-4 rounded-2xl font-bold text-white transition-all flex items-center justify-center gap-3 shadow-lg ${(!file || !apiKey || loading) ? 'bg-slate-200 text-slate-400 shadow-none cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200 active:scale-[0.97]'}`}
               >
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Processing Pipeline...
+                    Extracting...
                   </>
                 ) : (
                   <>
                     <LayoutPanelLeft className="w-5 h-5" />
-                    Extract Data
+                    Run Pipeline
                   </>
                 )}
               </button>
             </div>
           </div>
 
-          {/* Right Column: Status & Results */}
-          <div className="lg:col-span-7">
+          {/* Right Column: Output Display */}
+          <div className="flex-grow w-full">
             {(!status && !error && !loading) ? (
-              <div className="h-full min-h-[300px] border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center p-12 text-center text-slate-400">
-                <Code2 className="w-12 h-12 mb-4 opacity-20" />
-                <p className="text-lg font-medium">Ready for Extraction</p>
-                <p className="text-sm max-w-xs mx-auto">Upload a resume and click extract to see the semantic breakdown here.</p>
+              <div className="h-full min-h-[450px] bg-white border border-slate-200/60 rounded-[32px] flex flex-col items-center justify-center p-12 text-center shadow-sm">
+                <div className="bg-slate-50 p-6 rounded-full mb-6">
+                  <Code2 className="w-10 h-10 text-slate-200" />
+                </div>
+                <h4 className="text-xl font-bold text-slate-800 mb-2">Awaiting Data</h4>
+                <p className="text-slate-400 text-sm max-w-xs leading-relaxed">
+                  Your structured results will appear here in real-time once you start the extraction process.
+                </p>
               </div>
             ) : (
-              <div className={`bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden transition-all h-full flex flex-col ${error ? 'border-red-100 ring-4 ring-red-50' : ''}`}>
-                <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+              <div className={`bg-white rounded-[32px] shadow-2xl shadow-slate-200/50 border border-slate-200/60 overflow-hidden transition-all flex flex-col h-[550px] ${error ? 'border-red-200 ring-8 ring-red-50/50' : ''}`}>
+                <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
                   <div className="flex items-center gap-3">
-                    <h3 className="font-bold text-slate-800">Extraction Results</h3>
-                    {status?.status === 'completed' && <CheckCircle2 className="w-5 h-5 text-emerald-500" />}
+                    <div className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse" />
+                    <h3 className="font-bold text-slate-800 tracking-tight">Structured Output</h3>
                   </div>
-                  <span className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border ${
-                    status?.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
-                    status?.status === 'failed' ? 'bg-red-50 text-red-700 border-red-100' :
-                    'bg-indigo-50 text-indigo-700 border-indigo-100'
-                  }`}>
-                    {status?.status || 'Active'}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    {status?.status === 'completed' && (
+                       <button 
+                       onClick={() => {
+                         navigator.clipboard.writeText(JSON.stringify(status.result, null, 2));
+                         alert("Copied to clipboard!");
+                       }}
+                       className="p-2 hover:bg-indigo-50 text-indigo-600 rounded-lg transition-all"
+                       title="Copy JSON"
+                     >
+                       <Copy className="w-4 h-4" />
+                     </button>
+                    )}
+                    <span className={`text-[10px] font-extrabold uppercase tracking-[0.2em] px-4 py-2 rounded-xl border-2 ${
+                      status?.status === 'completed' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                      status?.status === 'failed' ? 'bg-red-50 text-red-600 border-red-100' :
+                      'bg-indigo-50 text-indigo-600 border-indigo-100'
+                    }`}>
+                      {status?.status || 'Queued'}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="p-6 flex-grow">
+                <div className="p-8 flex-grow overflow-hidden relative bg-[#0f172a]">
                   {error && (
-                    <div className="flex items-start gap-3 bg-red-50 p-4 rounded-2xl text-red-700 border border-red-100">
-                      <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
-                      <div>
-                        <p className="font-bold text-sm">Operation Failed</p>
-                        <p className="text-xs mt-1 leading-relaxed">{error}</p>
+                    <div className="absolute inset-0 flex items-center justify-center p-8 bg-white z-20">
+                      <div className="text-center max-w-sm">
+                        <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600">
+                          <AlertCircle className="w-8 h-8" />
+                        </div>
+                        <h4 className="font-bold text-slate-900 mb-2 text-lg">Extraction Failed</h4>
+                        <p className="text-slate-500 text-sm leading-relaxed">{error}</p>
+                        <button onClick={() => {setError(null); setLoading(false);}} className="mt-6 px-6 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold">Try Again</button>
                       </div>
                     </div>
                   )}
 
                   {loading && !status && (
-                    <div className="flex flex-col items-center justify-center py-20 text-indigo-600">
-                      <Loader2 className="w-10 h-10 animate-spin mb-4" />
-                      <p className="font-bold">Analyzing Semantics...</p>
-                      <p className="text-xs text-slate-400 mt-2">This may take up to 30 seconds</p>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-20">
+                      <div className="relative">
+                        <div className="w-20 h-20 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin" />
+                        <Loader2 className="w-8 h-8 text-indigo-600 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                      </div>
+                      <p className="font-extrabold text-slate-800 mt-6 text-lg tracking-tight">AI is Processing</p>
+                      <p className="text-xs text-slate-400 mt-2 font-medium">Extracting semantic entities from your PDF...</p>
                     </div>
                   )}
 
                   {status?.status === 'completed' && status.result && (
-                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-full flex flex-col">
-                      <div className="flex items-center justify-between mb-4">
-                        <p className="text-[10px] font-mono text-slate-400">ID: {jobId}</p>
-                        <button 
-                          onClick={() => {
-                            navigator.clipboard.writeText(JSON.stringify(status.result, null, 2));
-                            alert("Copied to clipboard!");
-                          }}
-                          className="px-3 py-1.5 bg-slate-100 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-bold text-slate-600 transition-all flex items-center gap-2"
-                        >
-                          <Copy className="w-3.5 h-3.5" /> Copy JSON
-                        </button>
-                      </div>
-                      <div className="relative flex-grow">
-                        <pre className="absolute inset-0 bg-slate-900 text-indigo-300 p-6 rounded-2xl overflow-auto text-xs sm:text-sm font-mono leading-relaxed shadow-inner border border-slate-800 custom-scrollbar">
-                          {JSON.stringify(status.result, null, 2)}
-                        </pre>
-                      </div>
+                    <div className="animate-in fade-in duration-1000 h-full">
+                       <pre className="h-full text-indigo-300 text-xs sm:text-[13px] font-mono leading-relaxed overflow-auto custom-scrollbar p-2">
+                        {JSON.stringify(status.result, null, 2)}
+                      </pre>
                     </div>
                   )}
                 </div>
+                
+                {jobId && (
+                  <div className="px-8 py-3 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Job Reference</span>
+                    <span className="text-[10px] font-mono text-slate-500">{jobId}</span>
+                  </div>
+                )}
               </div>
             )}
           </div>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 text-center">
-        <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent w-full mb-8"></div>
-        <p className="text-slate-400 text-xs sm:text-sm">
-          Engineering Project by <a href="https://github.com/AksShri2004" target="_blank" rel="noreferrer" className="font-bold text-slate-600 hover:text-indigo-600 transition-colors">Akshat Shrivastava</a>
-        </p>
+      {/* Centered Footer */}
+      <footer className="max-w-6xl mx-auto px-6 mt-32 text-center">
+        <div className="h-px bg-slate-200/60 w-full mb-10"></div>
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
+          <p className="text-slate-400 text-xs font-medium">
+            &copy; 2025 AI Resume Extractor Microservice
+          </p>
+          <p className="text-slate-500 text-xs font-medium flex items-center gap-1.5">
+            Architected by <a href="https://github.com/AksShri2004" target="_blank" rel="noreferrer" className="font-bold text-slate-900 hover:text-indigo-600 transition-all underline decoration-slate-200 underline-offset-4">Akshat Shrivastava</a>
+          </p>
+        </div>
       </footer>
 
       <style>{`
-        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fade-in 0.6s ease-out forwards; }
       `}</style>
     </div>
   );
