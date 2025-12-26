@@ -3,6 +3,8 @@ from typing import Optional
 
 class Settings(BaseSettings):
     API_KEY: str = "test-secret-key"
+    GUEST_KEY: Optional[str] = "GUEST123"
+    GUEST_USAGE_LIMIT: int = 3
     API_V1_STR: str = "/v1"
     PROJECT_NAME: str = "Resume Extractor"
     
