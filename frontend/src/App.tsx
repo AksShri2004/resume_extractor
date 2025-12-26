@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Upload, FileText, CheckCircle2, AlertCircle, Loader2, Copy, Github, ExternalLink, Key } from 'lucide-react';
+import { Upload, FileText, CheckCircle2, AlertCircle, Loader2, Copy, Github, Key } from 'lucide-react';
 
 interface ResumeResult {
   skills: string[];
@@ -212,6 +212,10 @@ function App() {
                   {status?.status || 'Initiating'}
                 </span>
               </div>
+              
+              {jobId && (
+                <p className="text-[10px] text-slate-400 mb-2 font-mono">Job ID: {jobId}</p>
+              )}
 
               {error && (
                 <div className="text-sm text-red-600 bg-red-100 p-3 rounded-lg flex items-center gap-2">
