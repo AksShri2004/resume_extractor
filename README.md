@@ -9,6 +9,8 @@ A production-grade microservice that transforms unstructured PDF resumes into hi
 
 🔗 **Live Demo:** [https://AksShri2004.github.io/resume_extractor/](https://AksShri2004.github.io/resume_extractor/)
 
+![Flow](assets/simple-h.png)
+
 ---
 
 ## 🚀 The Core Engine: Gemma 3
@@ -35,6 +37,8 @@ Designed to be public-facing while protecting API quotas:
 - **IP-Based Quota:** Guest users are limited to **3 resumes per day**.
 - **Global Cooldown:** A mandatory **10-second wait** between guest requests to prevent rapid-fire spam.
 - **Admin Bypass:** Use a private `X-API-Key` to bypass all rate limits and cooldowns.
+
+![pipeline](assets/new.png)
 
 ---
 
